@@ -1,6 +1,7 @@
 from datetime import datetime
 from datetime import timedelta
 from operator import itemgetter
+import heapq
 data = []
 with open('../Data/Day4.txt') as infile:
     data = infile.readlines()
@@ -79,6 +80,32 @@ def part1():
     
     print(int(max_sleeping_guard[0])*max_minute_slept[0])
 
+    return tally_sleep
 
+# part1()
 
-part1()
+def part2():
+    '''
+    for each minute, write down minutes slept and indicate guard 
+
+    '''
+    tally_sleep = part1()
+    by_minutes = {x:{} for x in range(60)}
+    for k, v in tally_sleep.items():
+        for i,j in v.items():
+            by_minutes[i][k] = j
+    
+    minute_ratios = {}
+    for k,v in by_minutes.items():
+        # print("k ", k)
+        largest_two = heapq.nlargest(2, v.items(), key=itemgetter(1))
+        minute_ratios[k] = largest_two[0][1] - largest_two[1][1]
+        # print('\n')
+    
+    minute_result = max(minute_ratios.items(), key=itemgetter(1))
+    print(minute_result)
+    guard_result = max(by_minutes[minute_result[0]].items(), key=itemgetter(1))[0]
+    print(guard_result)
+    print(int(guard_result)*minute_result[0])
+
+part2()
