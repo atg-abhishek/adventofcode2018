@@ -1,3 +1,5 @@
+from copy import copy
+from operator import itemgetter
 data = ""
 with open("../Data/Day5.txt") as infile:
     data = infile.read()
@@ -16,15 +18,33 @@ def eliminate_characters(inp):
     else:
         return None
 
-def part1():
+def part1(chars):
     # inp = "dabAcCaCBAcCcaDA"
-    inp = data
+    inp = chars
     last = inp
     while inp:
         last = inp
         inp = eliminate_characters(last)
         
     
-    print(len(last))
+    return len(last)
 
-part1()
+def part2(chars):
+    inp = chars 
+    duplicate_inp = copy(inp)
+    duplicate_inp = duplicate_inp.upper()
+    letter_set = set(duplicate_inp)
+    # print(letter_set)
+    results = {}
+    for letter in letter_set:
+        print("Letter is ", letter)
+        lower_letter = letter.lower()
+        upper_letter = letter
+        new_inp = inp.replace(lower_letter, "")
+        new_inp = new_inp.replace(upper_letter, "")
+        results[letter] = part1(new_inp)
+        print("Results are ", results)
+    
+    print(min(results.items(), key=itemgetter(1)))
+
+part2(data)
